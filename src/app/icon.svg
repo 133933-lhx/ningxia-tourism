@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="宁夏文旅指南">
+  <rect width="64" height="64" rx="14" fill="#9a4423" />
+  <path d="M6 46 C18 38 26 48 36 42 C46 36 52 46 58 40 L58 64 L6 64 Z" fill="#c9a97f" opacity="0.55" />
+  <text x="32" y="42" text-anchor="middle" font-family="Songti SC, STSong, serif" font-size="34" font-weight="700" fill="#fdfaf5">宁</text>
+</svg>

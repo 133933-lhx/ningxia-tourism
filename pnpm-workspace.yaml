@@ -1,0 +1,8 @@
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - unrs-resolver
+  - "@tailwindcss/oxide"
+  - "@next/swc-win32-x64-msvc"
+
+verifyDepsBeforeRun: false

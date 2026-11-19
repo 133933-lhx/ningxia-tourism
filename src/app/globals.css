@@ -1,0 +1,502 @@
+@import "tailwindcss";
+
+/* ============================================================
+   设计方向：岩画田野图录（Editorial × 贺兰山岩画）
+   - 暖纸底 + 墨黑 + 单一朱砂强调；拓片墨底区块与纸面交替
+   - 正文宋体（中文读物传统），功能层黑体，元信息等宽
+   - 凿刻线母题贯穿：分隔纹样、图腾印章、拓片封面
+   ============================================================ */
+
+@theme {
+  /* 纸 / 墨 */
+  --color-paper: #f0e7d3;
+  --color-paper-light: #faf4e4;
+  --color-paper-deep: #e4d4b6;
+  --color-ink: #1a1410;
+  --color-ink-soft: #221a13;
+  --color-line: rgba(26, 20, 16, 0.17);
+  --color-line-strong: rgba(26, 20, 16, 0.46);
+
+  /* 朱砂（唯一强调色）/ 石青（仅水系语义）/ 赭石（仅警示） */
+  --color-vermilion: #b23a24;
+  --color-vermilion-deep: #8c2b19;
+  --color-teal: #2c5a57;
+  --color-ochre: #76521f;
+  --color-success: #2f6f55;
+  --color-danger: #9d2f24;
+  --color-info: #315d76;
+
+  /* 旧 token 保留映射，避免历史页面脱节 */
+  --color-sand-50: #f0e7d3;
+  --color-sand-100: #ebdfc8;
+  --color-sand-200: #e0d0b4;
+  --color-sand-300: #c9b896;
+  --color-clay-50: #f5e3da;
+  --color-clay-100: #eccfc2;
+  --color-clay-500: #b23a24;
+  --color-clay-600: #9a311d;
+  --color-clay-700: #7d2716;
+  --color-river-50: #e5eeeb;
+  --color-river-100: #cdded9;
+  --color-river-500: #2f5f5b;
+  --color-river-600: #275450;
+  --color-river-700: #1e4541;
+  --color-ink-500: #6f6252;
+  --color-ink-700: #382d23;
+  --color-ink-900: #1a1410;
+
+  /* 字族：展示与正文皆宋体（中文读物传统），功能层黑体，元信息等宽 */
+  --font-display: "Songti SC", "STSong", "SimSun-ExtB", "SimSun", "Source Han Serif SC",
+    "Noto Serif SC", serif;
+  --font-body: "Songti SC", "STSong", "SimSun", "Source Han Serif SC", "Noto Serif SC",
+    Georgia, "Times New Roman", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei",
+    "Hiragino Sans GB", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas,
+    "Liberation Mono", monospace;
+
+  /* 动效令牌 */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 160ms;
+  --dur-base: 340ms;
+  --dur-slow: 680ms;
+}
+
+:root {
+  color-scheme: light;
+  --scene-sky-top: #e8c995;
+  --scene-sky-bottom: #f5e8cd;
+  --scene-ground-1: #b65c36;
+  --scene-ground-2: #d79a5e;
+  --scene-dune: #c7834f;
+  --scene-foreground: #8f4930;
+  --scene-water: #5d897e;
+  --scene-line: #2b211a;
+  --scene-reeds: #2d4b3e;
+  --scene-reed: #2d4b3e;
+  --scene-monument: #3c2a1d;
+  --scene-sun: #d95435;
+  --dish-line: #2d2119;
+  --dish-surface: #f8efda;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: #17130f;
+  --color-paper-light: #211b16;
+  --color-paper-deep: #2e261e;
+  --color-ink: #f3e8d7;
+  --color-ink-soft: #e6d8c4;
+  --color-line: rgba(243, 232, 215, 0.16);
+  --color-line-strong: rgba(243, 232, 215, 0.42);
+  --color-vermilion: #ed7557;
+  --color-vermilion-deep: #ff967b;
+  --color-teal: #78b5a8;
+  --color-ochre: #e0b36c;
+  --color-success: #72be9b;
+  --color-danger: #f08374;
+  --color-info: #80b9d1;
+  --color-ink-500: #b8aa98;
+  --color-ink-700: #ddd0bf;
+  --color-ink-900: #f3e8d7;
+  --scene-sky-top: #4c2d24;
+  --scene-sky-bottom: #866049;
+  --scene-ground-1: #673d2b;
+  --scene-ground-2: #9d6b47;
+  --scene-dune: #835837;
+  --scene-foreground: #38271e;
+  --scene-water: #325b59;
+  --scene-line: #f0d7ae;
+  --scene-reed: #93bba5;
+  --scene-monument: #e4c59b;
+  --scene-sun: #d85d42;
+  --dish-line: #f2e0c8;
+  --dish-surface: #3c3026;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-paper-light) 42%, transparent), transparent 34rem),
+    var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 220ms ease-out, color 220ms ease-out;
+}
+
+::selection {
+  background-color: var(--color-vermilion);
+  color: var(--color-paper-light);
+}
+
+/* ---------- 字族工具类 ---------- */
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* 功能层黑体：按钮、导航、标签、表单等小于等于 12px 的 UI 文字使用 */
+.font-ui {
+  font-family: var(--font-sans);
+}
+
+.font-mono-ui {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 布局 ---------- */
+
+.container-page {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .container-page {
+    padding-inline: 2.5rem;
+  }
+}
+
+/* ---------- 氛围层 ---------- */
+
+/* 纸面颗粒：全站铺一层极淡的噪点，替代纯色平铺 */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+/* 区块级颗粒（比全页稍强，用于纸面区块） */
+.grain {
+  position: relative;
+}
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.3;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+}
+
+/* 拓片墨底：深墨区块自带粗颗粒与纸色微尘 */
+.rubbing {
+  background-color: var(--color-ink);
+  color: var(--color-paper-light);
+  position: relative;
+}
+.rubbing::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* 凿刻分隔带：替代机械的 border-b，用岩刻线节奏分开区块 */
+.petro-rule {
+  height: 18px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='18'%3E%3Cg fill='none' stroke='%231a1410' stroke-width='1' opacity='0.5'%3E%3Cpath d='M2 9 h10'/%3E%3Ccircle cx='24' cy='9' r='3.2'/%3E%3Cpath d='M24 3.4 v-2.2 M24 14.6 v2.2 M18.4 9 h-2.2 M29.6 9 h2.2 M36 9 h10'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: center;
+  opacity: 0.5;
+}
+
+/* ---------- 印章图腾 ---------- */
+
+/* 方印章：岩画太阳神图腾（SVG 由组件提供，这里管容器形态） */
+.seal {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  flex: none;
+  background: var(--color-vermilion);
+  color: var(--color-paper-light);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  line-height: 1;
+  box-shadow:
+    inset 0 0 0 2px rgba(250, 244, 228, 0.85),
+    inset 0 0 0 3px rgba(26, 20, 16, 0.25);
+}
+
+/* ---------- 元信息 ---------- */
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink-500);
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+/* 竖排文字 */
+.vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 0.35em;
+}
+
+/* ---------- 图版 ---------- */
+
+/* 双线框图版 */
+.plate {
+  background: var(--color-paper-deep);
+  box-shadow:
+    inset 0 0 0 1px rgba(26, 20, 16, 0.2),
+    inset 0 0 0 7px var(--color-paper-deep),
+    inset 0 0 0 8px rgba(26, 20, 16, 0.16);
+}
+
+.destination-art {
+  --scene-dune: color-mix(in srgb, var(--scene-ground-2) 80%, white);
+}
+
+.dish-art-vermilion {
+  --dish-wash: color-mix(in srgb, var(--color-vermilion) 12%, var(--color-paper-light));
+  --dish-glow: color-mix(in srgb, var(--color-vermilion) 25%, transparent);
+  --dish-bowl: color-mix(in srgb, var(--color-vermilion) 68%, var(--color-ink));
+}
+
+.dish-art-ochre {
+  --dish-wash: color-mix(in srgb, var(--color-ochre) 13%, var(--color-paper-light));
+  --dish-glow: color-mix(in srgb, var(--color-ochre) 28%, transparent);
+  --dish-bowl: color-mix(in srgb, var(--color-ochre) 60%, var(--color-ink));
+}
+
+.dish-art-teal {
+  --dish-wash: color-mix(in srgb, var(--color-teal) 12%, var(--color-paper-light));
+  --dish-glow: color-mix(in srgb, var(--color-teal) 25%, transparent);
+  --dish-bowl: color-mix(in srgb, var(--color-teal) 65%, var(--color-ink));
+}
+
+.route-band {
+  min-width: 0;
+}
+
+.map-region:focus-visible {
+  outline: 2px solid var(--color-vermilion);
+  outline-offset: 2px;
+}
+
+.section-anchor {
+  scroll-margin-top: 11rem;
+}
+
+/* 测绘角标：图录页的四角刻度 */
+.survey-corner {
+  position: relative;
+}
+.survey-corner::before,
+.survey-corner::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+.survey-corner::before {
+  top: 10px;
+  left: 10px;
+  border-top: 1px solid rgba(26, 20, 16, 0.4);
+  border-left: 1px solid rgba(26, 20, 16, 0.4);
+}
+.survey-corner::after {
+  bottom: 10px;
+  right: 10px;
+  border-bottom: 1px solid rgba(26, 20, 16, 0.4);
+  border-right: 1px solid rgba(26, 20, 16, 0.4);
+}
+
+.hairline {
+  border-color: var(--color-line);
+}
+
+.link-line {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(26, 20, 16, 0.35);
+  transition: color var(--dur-fast) ease-out, text-decoration-color var(--dur-fast) ease-out;
+}
+.link-line:hover {
+  color: var(--color-vermilion);
+  text-decoration-color: var(--color-vermilion);
+}
+
+/* 首字下沉 */
+.dropcap::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-size: 3.4em;
+  line-height: 0.84;
+  padding: 0.08em 0.12em 0 0;
+  color: var(--color-vermilion);
+}
+
+/* ---------- 交互基元 ---------- */
+
+.card-hover {
+  transition:
+    color var(--dur-fast) ease-out,
+    background-color var(--dur-fast) ease-out,
+    border-color var(--dur-fast) ease-out,
+    transform var(--dur-fast) ease-out;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-vermilion);
+  outline-offset: 3px;
+}
+
+/* 悬停扫线：导航与条目用，下划线从左扫入 */
+.sweep {
+  position: relative;
+}
+.sweep::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-out-expo);
+}
+.sweep:hover::after,
+.sweep:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* ---------- 入场编排 ---------- */
+/* 渐进增强：只有 .js（脚本可用）时才先隐藏再等入场；
+   无 JS 环境内容直接可见，不会出现永久空白。 */
+/* 只动 transform / opacity；reduced-motion 下全部直接显示 */
+
+.js .reveal {
+  opacity: 0;
+  transform: translateY(22px);
+}
+.js .reveal.is-in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--dur-slow) var(--ease-out-expo),
+    transform var(--dur-slow) var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal,
+  .js .reveal.is-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- 跑马灯（岩画符号带） ---------- */
+
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-x 36s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- 表单控件 ---------- */
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: var(--color-line);
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--color-vermilion);
+  border: 0;
+  border-radius: 0;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--color-vermilion);
+  border: 0;
+  border-radius: 0;
+}
+input[type="range"]::-moz-range-track {
+  height: 2px;
+  background: var(--color-line);
+}
+
+.scroll-thin {
+  scrollbar-width: thin;
+}
+
+/* 直线装饰 */
+.rule::before {
+  content: "";
+  display: block;
+  width: 2.75rem;
+  height: 1px;
+  background: var(--color-ink);
+  margin-bottom: 0.9rem;
+  opacity: 0.5;
+}
